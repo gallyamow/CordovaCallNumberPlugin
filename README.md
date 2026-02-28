@@ -7,14 +7,9 @@ Install the plugin using:
 
 
 ``` 
-npm install call-number
+ionic cordova plugin add https://github.com/gallyamow/CordovaCallNumberPlugin.git
 ```
 
-or
-
-```
-yarn add call-number
-```
 
 Use the plugin in your JS file:
 ``` javascript
