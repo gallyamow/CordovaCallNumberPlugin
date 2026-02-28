@@ -3,14 +3,14 @@
   xmlns="http://apache.org/cordova/ns/plugins/1.0"
   xmlns:android="http://schemas.android.com/apk/res/android"
   id="call-number"
-  version="1.0.4">
+  version="1.0.7">
 
   <description>Call Number from Cordova Application</description>
 
   <name>Cordova Call Number Plugin</name>
   <author>Rohith Varanasi, Nishil Shah</author>
-  
-  
+
+
   <repo>https://github.com/Rohfosho/CordovaCallNumberPlugin.git</repo>
   <issue>https://github.com/Rohfosho/CordovaCallNumberPlugin/issues</issue>
 
@@ -25,6 +25,11 @@
       <feature name="CallNumber">
         <param name="ios-package" value="CFCallNumber"/>
       </feature>
+    </config-file>
+    <config-file target="*-Info.plist" parent="LSApplicationQueriesSchemes">
+      <array>
+          <string>tel</string>
+      </array>
     </config-file>
     <header-file src="src/ios/CFCallNumber.h" />
     <source-file src="src/ios/CFCallNumber.m" />

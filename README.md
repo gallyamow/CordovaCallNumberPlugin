@@ -37,3 +37,9 @@ function onError(result) {
   console.log("Error:"+result);
 }
 ```
+
+### CHANGELOG
+
+#### 1.0.7
+
+* CouldNotCallPhoneNumber fixed for iOS > 18
