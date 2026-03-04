@@ -74,17 +74,17 @@ public class CFCallNumber extends CordovaPlugin {
       boolean bypassAppChooser = Boolean.parseBoolean(args.getString(1));
       boolean enableTelephony = isTelephonyEnabled();
 
-      // Intent intent = new Intent(enableTelephony? (bypassAppChooser? Intent.ACTION_DIAL : Intent.ACTION_CALL) : Intent.ACTION_VIEW);
       Intent intent = new Intent(enableTelephony?  Intent.ACTION_CALL : Intent.ACTION_DIAL);
-
       intent.setData(Uri.parse(number));
 
+      /*
       if (!enableTelephony && bypassAppChooser) {
         String pkg = getDialerPackage(intent);
         if (pkg != null) {
           intent.setPackage(pkg);
         }
       }
+      */
 
       cordova.getActivity().startActivity(intent);
       callbackContext.success();
