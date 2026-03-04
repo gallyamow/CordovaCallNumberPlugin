@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.telephony.TelephonyManager;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 
 public class CFCallNumber extends CordovaPlugin {
   public static final int CALL_REQ_CODE = 0;
@@ -39,7 +40,7 @@ public class CFCallNumber extends CordovaPlugin {
         getCallPermission(CALL_REQ_CODE);
       }
     } else if (action.equals("isCallSupported")) {
-        this.callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, isTelephonyEnabled()));
+      this.callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, isTelephonyEnabled()));
     } else {
       return false;
     }
@@ -74,12 +75,15 @@ public class CFCallNumber extends CordovaPlugin {
       boolean enableTelephony = isTelephonyEnabled();
 
       // Intent intent = new Intent(enableTelephony? (bypassAppChooser? Intent.ACTION_DIAL : Intent.ACTION_CALL) : Intent.ACTION_VIEW);
-      Intent intent = new Intent(enableTelephony?  Intent.ACTION_CALL : Intent.ACTION_VIEW);
+      Intent intent = new Intent(enableTelephony?  Intent.ACTION_CALL : Intent.ACTION_DIAL);
 
       intent.setData(Uri.parse(number));
 
       if (!enableTelephony && bypassAppChooser) {
-        intent.setPackage(getDialerPackage(intent));
+        String pkg = getDialerPackage(intent);
+        if (pkg != null) {
+          intent.setPackage(pkg);
+        }
       }
 
       cordova.getActivity().startActivity(intent);
@@ -95,19 +99,14 @@ public class CFCallNumber extends CordovaPlugin {
   }
 
   private String getDialerPackage(Intent intent) {
-    PackageManager packageManager = (PackageManager) cordova.getActivity().getPackageManager();
-    List activities = packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY);
+    PackageManager packageManager = cordova.getActivity().getPackageManager();
+    ResolveInfo resolveInfo =
+            packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
 
-    for (int i = 0; i < activities.size(); i++) {
-      if (activities.get(i).toString().toLowerCase().contains("com.android.server.telecom")) {
-        return "com.android.server.telecom";
-      }
-      if (activities.get(i).toString().toLowerCase().contains("com.android.phone")) {
-        return "com.android.phone";
-      } else if (activities.get(i).toString().toLowerCase().contains("call")) {
-        return activities.get(i).toString().split("[ ]")[1].split("[/]")[0];
-      }
+    if (resolveInfo != null && resolveInfo.activityInfo != null) {
+      return resolveInfo.activityInfo.packageName;
     }
-    return "";
+
+    return null;
   }
 }
