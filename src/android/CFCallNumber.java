@@ -71,6 +71,7 @@ public class CFCallNumber extends CordovaPlugin {
       number = String.format("tel:%s", number);
     }
     try {
+      // Не ясно почему, то с bypassAppChooser = true никак не работает Intent.ACTION_CALL
       boolean bypassAppChooser = Boolean.parseBoolean(args.getString(1));
       boolean enableTelephony = isTelephonyEnabled();
 
